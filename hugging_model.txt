@@ -1,0 +1,115 @@
+1.NLP :-
+chatbot = pipeline(task="conversational",
+                   model="./models/facebook/blenderbot-400M-distill")
+
+2.Translation and Summarization : -
+translator = pipeline(task="translation",
+                      model="./models/facebook/nllb-200-distilled-600M",
+                      torch_dtype=torch.bfloat16) 
+summarizer = pipeline(task="summarization",
+                      model="./models/facebook/bart-large-cnn",
+                      torch_dtype=torch.bfloat16) 
+
+3. Sentence Embeddings :  - 
+from sentence_transformers import SentenceTransformer
+model = SentenceTransformer("all-MiniLM-L6-v2")
+
+4. Zero-Shot Audio Classification
+### Prepare the dataset of audio recordings
+from datasets import load_dataset, load_from_disk
+
+# This dataset is a collection of different sounds of 5 seconds
+# dataset = load_dataset("ashraq/esc50",
+#                       split="train[0:10]")
+dataset = load_from_disk("./models/ashraq/esc50/train")
+
+### Build the `audio classification` pipeline using 🤗 Transformers Library
+from transformers import pipeline
+zero_shot_classifier = pipeline(
+    task="zero-shot-audio-classification",
+    model="./models/laion/clap-htsat-unfused")
+
+
+5. Automatic Speech Recognition
+### Data preparation
+from datasets import load_dataset
+dataset = load_dataset("librispeech_asr",
+                       split="train.clean.100",
+                       streaming=True,
+                       trust_remote_code=True)
+
+### Build the pipeline
+from transformers import pipeline
+asr = pipeline(task="automatic-speech-recognition",
+               model="./models/distil-whisper/distil-small.en")
+
+## Note: Please stop the demo before continuing with the rest of the lab.
+he app will continue running unless you run
+demo.close()
+If you run another gradio app (later in this lesson) without first closing this appp, you'll see an error message:
+OSError: Cannot find empty port in range
+Testing with a longer audio file
+
+
+import soundfile as sf
+import io
+audio, sampling_rate = sf.read('narration_example.wav')
+
+
+6.Text to Speech
+### Build the `text-to-speech` pipeline using the 🤗 Transformers Library
+
+from transformers import pipeline
+
+narrator = pipeline("text-to-speech",
+                    model="./models/kakao-enterprise/vits-ljs")
+
+
+7.Object Detection
+### Build the `object-detection` pipeline using 🤗 Transformers Library
+od_pipe = pipeline("object-detection", "./models/facebook/detr-resnet-50")
+
+
+8.Segmentation
+### Mask Generation with SAM
+from transformers import pipeline
+sam_pipe = pipeline("mask-generation",
+    "./models/Zigeng/SlimSAM-uniform-77")
+
+
+9.Image Retrieval
+from transformers import BlipForImageTextRetrieval
+model = BlipForImageTextRetrieval.from_pretrained(
+    "./models/Salesforce/blip-itm-base-coco")
+
+from transformers import AutoProcessor
+processor = AutoProcessor.from_pretrained(
+    "./models/Salesforce/blip-itm-base-coco")
+
+10.Image Captioning 
+### load the model and processor
+from transformers import BlipForConditionalGeneration
+model = BlipForConditionalGeneration.from_pretrained(
+    "./models/Salesforce/blip-image-captioning-base")
+
+from transformers import AutoProcessor
+processor = AutoProcessor.from_pretrained(
+    "./models/Salesforce/blip-image-captioning-base")
+
+11. Visual Question & Answering
+from transformers import BlipForQuestionAnswering
+model = BlipForQuestionAnswering.from_pretrained(
+    "./models/Salesforce/blip-vqa-base")
+
+from transformers import AutoProcessor
+processor = AutoProcessor.from_pretrained(
+    "./models/Salesforce/blip-vqa-base")
+
+12. Zero Shot Image Classification
+from transformers import CLIPModel
+model = CLIPModel.from_pretrained(
+    "./models/openai/clip-vit-large-patch14")
+
+from transformers import AutoProcessor
+processor = AutoProcessor.from_pretrained(
+    "./models/openai/clip-vit-large-patch14")
